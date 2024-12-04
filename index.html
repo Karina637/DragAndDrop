@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Move Objects</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #f0f0f0;
+    }
+
+    .draggable {
+      width: 100px;
+      height: 100px;
+      position: absolute;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    #object1 {
+      background-color: red;
+    }
+
+    #object2 {
+      background-color: green;
+    }
+
+    #object3 {
+      background-color: blue;
+    }
+  </style>
+</head>
+<body>
+  <div id="object1" class="draggable"></div>
+  <div id="object2" class="draggable"></div>
+  <div id="object3" class="draggable"></div>
+
+  <script>
+    let isDragging = false;
+    let currentObject = null;
+    let offsetX = 0;
+    let offsetY = 0;
+
+    // Функція для початку перетягування
+    function startDrag(event) {
+      isDragging = true;
+      currentObject = event.target;
+      offsetX = event.clientX - currentObject.getBoundingClientRect().left;
+      offsetY = event.clientY - currentObject.getBoundingClientRect().top;
+    }
+
+    // Функція для перетягування об'єкта
+    function dragObject(event) {
+      if (isDragging && currentObject) {
+        let x = event.clientX - offsetX;
+        let y = event.clientY - offsetY;
+        currentObject.style.left = x + 'px';
+        currentObject.style.top = y + 'px';
+      }
+    }
+
+    // Функція для завершення перетягування
+    function stopDrag() {
+      isDragging = false;
+      currentObject = null;
+    }
+
+    // Додаємо слухачів подій для кожного об'єкта
+    const objects = document.querySelectorAll('.draggable');
+    objects.forEach(object => {
+      object.addEventListener('mousedown', startDrag);
+    });
+
+    // Додаємо слухачів подій для руху і відпускання миші
+    document.addEventListener('mousemove', dragObject);
+    document.addEventListener('mouseup', stopDrag);
+
+    // Розміщуємо об'єкти випадковим чином на екрані
+    window.onload = function() {
+      objects.forEach(object => {
+        let x = Math.random() * (window.innerWidth - 100);
+        let y = Math.random() * (window.innerHeight - 100);
+        object.style.left = x + 'px';
+        object.style.top = y + 'px';
+      });
+    }
+  </script>
+</body>
+</html>
